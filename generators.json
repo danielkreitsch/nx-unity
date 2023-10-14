@@ -4,6 +4,16 @@
       "factory": "./src/generators/project/generator",
       "schema": "./src/generators/project/schema.json",
       "description": "project generator"
+    },
+    "package": {
+      "factory": "./src/generators/package/generator",
+      "schema": "./src/generators/package/schema.json",
+      "description": "package generator"
+    },
+    "link": {
+      "factory": "./src/generators/link/generator",
+      "schema": "./src/generators/link/schema.json",
+      "description": "link generator"
     }
   }
 }
