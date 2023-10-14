@@ -1,6 +1,17 @@
 import { Tree } from "@nx/devkit"
 import { prompt } from "enquirer"
 import { getLibraries, getUnityProjects } from "./workspace"
+import { getAvailableUnityVersions } from "./unity-version"
+
+async function promptForUnityVersion(basePath: string, message: string): Promise<string> {
+  const result: { version: string } = await prompt({
+    type: "select",
+    name: "version",
+    message: message,
+    choices: getAvailableUnityVersions(basePath),
+  })
+  return result.version
+}
 
 async function promptForUnityProject(tree: Tree, message: string) {
   const result: { project: string } = await prompt({
@@ -22,4 +33,4 @@ async function promptForLibrary(tree: Tree, message: string) {
   return result.library
 }
 
-export { promptForUnityProject, promptForLibrary }
+export { promptForUnityVersion, promptForUnityProject, promptForLibrary }
