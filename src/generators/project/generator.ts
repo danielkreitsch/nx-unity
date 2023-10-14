@@ -2,7 +2,7 @@ import { addProjectConfiguration, formatFiles, generateFiles, Tree } from "@nx/d
 import { ProjectGeneratorSchema } from "./schema"
 import * as path from "path"
 import { getUnityBasePath, getUnityBinaryRelativePath } from "../../utils/platform"
-import { promptUnityVersion } from "../../utils/unity-version"
+import { promptForUnityVersion } from "../../utils/prompts"
 import { executeCommand } from "../../utils/exec"
 import * as fs from "fs"
 
@@ -24,7 +24,7 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
   }
 
   // Let the user select the Unity version
-  const unityVersion = await promptUnityVersion(unityBasePath)
+  const unityVersion = await promptForUnityVersion(unityBasePath, "Select Unity version")
 
   // Generate some starter files
   generateFiles(tree, path.join(__dirname, "files"), projectRoot, options)
