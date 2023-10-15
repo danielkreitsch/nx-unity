@@ -1,19 +1,15 @@
 import { exec } from "child_process"
+import { promisify } from "util"
 
-function executeCommand(command: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const childProcess = exec(command, (error) => {
-      if (error) {
-        console.error(`Error: ${error.message}`)
-        reject(error)
-        return
-      }
-      resolve()
-    })
-
-    childProcess.stdout?.pipe(process.stdout)
-    childProcess.stderr?.pipe(process.stderr)
-  })
+/**
+ * Executes a command and logs the output to the console.
+ * @returns true if the command was successful
+ */
+async function executeCommand(command: string): Promise<boolean> {
+  const { stdout, stderr } = await promisify(exec)(command)
+  console.log(stdout)
+  console.error(stderr)
+  return !stderr
 }
 
 export { executeCommand }
