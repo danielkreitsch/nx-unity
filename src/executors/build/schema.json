@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "Build executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "executeMethod": {
+      "type": "string",
+      "description": "The method to execute in order to create the build."
+    }
+  },
+  "required": ["executeMethod"]
+}
