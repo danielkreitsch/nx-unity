@@ -38,4 +38,10 @@ function getUnityBinaryRelativePath(): string {
   return path
 }
 
-export { getUnityBasePath, getUnityBinaryRelativePath }
+function getUnityBinaryPath(version: string) {
+  const unityBasePath = getUnityBasePath()
+  const unityBinaryRelativePath = getUnityBinaryRelativePath()
+  return `${unityBasePath}/${version}/${unityBinaryRelativePath}`
+}
+
+export { getUnityBasePath, getUnityBinaryRelativePath, getUnityBinaryPath }
