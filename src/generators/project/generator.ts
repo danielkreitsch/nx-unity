@@ -1,10 +1,13 @@
-import { addProjectConfiguration, formatFiles, generateFiles, Tree } from "@nx/devkit"
+import { addProjectConfiguration, formatFiles, generateFiles, output, Tree } from "@nx/devkit"
 import { ProjectGeneratorSchema } from "./schema"
 import * as path from "path"
-import { getUnityBasePath, getUnityBinaryRelativePath } from "../../utils/platform"
+import { getUnityBasePath } from "../../utils/platform"
 import { promptForUnityVersion } from "../../utils/prompts"
-import { executeCommand } from "../../utils/exec"
 import * as fs from "fs"
+import * as os from "os"
+import axios from "axios"
+import AdmZip from "adm-zip"
+import { createUnityProject } from "../../utils/unity-project"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
   const projectRoot = `apps/${options.name}`
@@ -51,15 +54,53 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
   // Let the user select the Unity version
   const unityVersion = await promptForUnityVersion(unityBasePath, "Select Unity version")
 
-  // Generate some starter files
+  // Copy general starter files
   generateFiles(tree, path.join(__dirname, "files"), projectRoot, options)
 
-  // Create the project by starting Unity with the -createProject flag
-  console.log("Starting Unity...")
-  const unityBinaryPath = path.join(unityBasePath, unityVersion, getUnityBinaryRelativePath())
-  executeCommand(`"${unityBinaryPath}" -createProject ${projectRoot}`)
+  // Download and extract the selected template
+  const basePath = `${os.tmpdir()}/nx-unity/templates/${unityVersion}`
+  const templatePath = `${basePath}/${options.template}`
+  const templateZipPath = `${templatePath}.zip`
+  const downloadUrl = `https://nx-unity-cdn.vercel.app/templates/${unityVersion}/${options.template}.zip`
+  try {
+    fs.mkdirSync(templatePath, { recursive: true })
+    await downloadFile(downloadUrl, templateZipPath)
+    unzipFile(templateZipPath, templatePath)
+    generateFiles(tree, templatePath, projectRoot, options)
+  } catch (e) {
+    if (options.template === "builtin") {
+      output.warn({
+        title: "Creating project from scratch",
+        bodyLines: [
+          `Failed to download template from ${downloadUrl}`,
+          "Creating a new project from scratch instead",
+        ],
+      })
+      await createUnityProject(unityBasePath, unityVersion, projectRoot)
+    } else {
+      throw new Error(`Failed to download template from ${downloadUrl}`)
+    }
+  }
 
   await formatFiles(tree)
+}
+
+function downloadFile(url: string, outputFilePath: string): Promise<void> {
+  return axios({
+    method: "GET",
+    url: url,
+    responseType: "stream",
+  }).then((response) => {
+    return new Promise<void>((resolve, reject) => {
+      const stream = fs.createWriteStream(outputFilePath)
+      response.data.pipe(stream).on("finish", resolve).on("error", reject)
+    })
+  })
+}
+
+function unzipFile(zipFilePath: string, outputDir: string): void {
+  const zip = new AdmZip(zipFilePath)
+  zip.extractAllTo(outputDir, true)
 }
 
 export default projectGenerator
