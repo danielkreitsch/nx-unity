@@ -16,7 +16,30 @@
       "description": "The display name of the project.",
       "default": "My Project",
       "x-prompt": "What display name would you like to use for the project?"
+    },
+    "template": {
+      "type": "string",
+      "description": "The template to use for the project.",
+      "default": "default",
+      "x-prompt": {
+        "message": "What rendering pipeline would you like to use for the project?",
+        "type": "list",
+        "items": [
+          {
+            "value": "builtin",
+            "label": "Built-in Render Pipeline"
+          },
+          {
+            "value": "urp",
+            "label": "Universal Render Pipeline (URP)"
+          },
+          {
+            "value": "hdrp",
+            "label": "High Definition Render Pipeline (HDRP)"
+          }
+        ]
+      }
     }
   },
-  "required": ["name"]
+  "required": ["name", "displayName", "template"]
 }
