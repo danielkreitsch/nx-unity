@@ -20,7 +20,7 @@ function getApplications(tree: Tree) {
 function getLibraries(tree: Tree) {
   const libraries = []
   getProjects(tree).forEach((project) => {
-    if (project.projectType === "library") {
+    if (project.name && project.projectType === "library") {
       libraries.push(project.name)
     }
   })
