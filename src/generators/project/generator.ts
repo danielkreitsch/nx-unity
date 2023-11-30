@@ -1,4 +1,11 @@
-import { addProjectConfiguration, formatFiles, generateFiles, output, Tree } from "@nx/devkit"
+import {
+  addProjectConfiguration,
+  formatFiles,
+  generateFiles,
+  getWorkspaceLayout,
+  output,
+  Tree,
+} from "@nx/devkit"
 import { ProjectGeneratorSchema } from "./schema"
 import * as path from "path"
 import { getUnityBasePath } from "../../utils/platform"
@@ -10,7 +17,8 @@ import AdmZip from "adm-zip"
 import { createUnityProject } from "../../utils/unity-project"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
-  const projectRoot = `apps/${options.name}`
+  const { name: projectName } = options
+  const projectRoot = path.join(getWorkspaceLayout(tree).appsDir, projectName)
 
   // Add the project to the Nx workspace
   addProjectConfiguration(tree, options.name, {
