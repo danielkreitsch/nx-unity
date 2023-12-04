@@ -16,6 +16,7 @@ import axios from "axios"
 import AdmZip from "adm-zip"
 import { addDependencyToUnityProject, createUnityProject } from "../../utils/unity-project"
 import { installPackage } from "../../utils/package-manager"
+import { addImplicitDependency, getUnityPackages, getUnityProjects } from "../../utils/workspace"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
   const { name: projectName } = options
@@ -52,6 +53,7 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
         defaultConfiguration: "windows",
       },
     },
+    implicitDependencies: getUnityPackages(tree),
   })
 
   // Check if Unity is installed
