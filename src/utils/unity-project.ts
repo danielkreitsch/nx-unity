@@ -13,7 +13,6 @@ async function createUnityProject(
 ) {
   const unityBinaryPath = path.join(unityBasePath, unityVersion, getUnityBinaryRelativePath())
   const command = `"${unityBinaryPath}" -quit -batchmode -nographics -logFile - -createProject ${projectRoot}`
-  console.log(`Executing command: ${command}`)
   await executeCommand(command)
 }
 
