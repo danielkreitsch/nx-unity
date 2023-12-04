@@ -11,7 +11,7 @@ namespace NxUnity
   [System.Serializable]
   public class GlobalDependenciesDefinition
   {
-    public const string Path = "../../package.json";
+    public static string Path => NxUtils.GetWorkspaceRoot() + "/package.json";
 
     [SerializeField]
     [JsonProperty("unityDependencies")]
