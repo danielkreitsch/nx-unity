@@ -1,4 +1,3 @@
-import { prompt } from "enquirer"
 import { readdirSync } from "fs"
 
 function getAvailableUnityVersions(basePath: string): string[] {
@@ -10,15 +9,4 @@ function getAvailableUnityVersions(basePath: string): string[] {
   }
 }
 
-async function promptUnityVersion(basePath: string): Promise<string> {
-  const versions = await getAvailableUnityVersions(basePath)
-  const result: { version: string } = await prompt({
-    type: "select",
-    name: "version",
-    message: "Select Unity version",
-    choices: versions,
-  })
-  return result.version
-}
-
-export { getAvailableUnityVersions, promptUnityVersion }
+export { getAvailableUnityVersions }
