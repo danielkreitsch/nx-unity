@@ -13,6 +13,12 @@
       },
       "x-prompt": "What name would you like to use for the project?",
       "pattern": "^[a-zA-Z][^:]*$"
+    },
+    "displayName": {
+      "type": "string",
+      "description": "The display name of the project.",
+      "default": "My Project",
+      "x-prompt": "What display name would you like to use for the project?"
     }
   },
   "required": ["name"]

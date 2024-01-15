@@ -1,0 +1,66 @@
+using System.IO;
+using System.Linq;
+using UnityEditor;
+
+public class BuildScript
+{
+  // The base path for all builds
+  private const string BaseBuildPath = "../../dist/<%= name %>";
+
+  [MenuItem("Build/Windows")]
+  public static void BuildWindows()
+  {
+    Build("windows", BuildTarget.StandaloneWindows64, "<%= displayName %>.exe");
+  }
+
+  [MenuItem("Build/MacOS")]
+  public static void BuildMacOS()
+  {
+    Build("macos", BuildTarget.StandaloneOSX, "<%= displayName %>.app");
+  }
+
+  [MenuItem("Build/Linux")]
+  public static void BuildLinux()
+  {
+    Build("linux", BuildTarget.StandaloneLinux64, "<%= displayName %>.x86_64");
+  }
+
+  [MenuItem("Build/Android")]
+  public static void BuildAndroid()
+  {
+    Build("android", BuildTarget.Android, "<%= displayName %>.apk");
+  }
+
+  [MenuItem("Build/iOS")]
+  public static void BuildiOS()
+  {
+    Build("ios", BuildTarget.iOS, "");
+  }
+
+  [MenuItem("Build/WebGL")]
+  public static void BuildWebGL()
+  {
+    Build("webgl", BuildTarget.WebGL, "");
+  }
+
+  private static void Build(string platform, BuildTarget buildTarget, string executableName)
+  {
+    string dirPath = Path.Combine(BaseBuildPath, platform);
+    Directory.CreateDirectory(dirPath);
+
+    // Prepare build options
+    BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+    {
+      scenes = EditorBuildSettings.scenes
+        .Where(scene => scene.enabled)
+        .Select(scene => scene.path)
+        .ToArray(),
+      locationPathName = Path.Combine(dirPath, executableName),
+      target = buildTarget,
+      options = BuildOptions.None
+    };
+
+    // Perform the build
+    BuildPipeline.BuildPlayer(buildPlayerOptions);
+  }
+}

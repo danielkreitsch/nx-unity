@@ -13,8 +13,33 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
   addProjectConfiguration(tree, options.name, {
     root: projectRoot,
     projectType: "application",
-    sourceRoot: path.join(projectRoot, "Assets"),
-    targets: {},
+    sourceRoot: `${projectRoot}/Assets`,
+    targets: {
+      build: {
+        executor: "nx-unity:build",
+        configurations: {
+          windows: {
+            executeMethod: "BuildScript.BuildWindows",
+          },
+          macos: {
+            executeMethod: "BuildScript.BuildMacOS",
+          },
+          linux: {
+            executeMethod: "BuildScript.BuildLinux",
+          },
+          android: {
+            executeMethod: "BuildScript.BuildAndroid",
+          },
+          ios: {
+            executeMethod: "BuildScript.BuildiOS",
+          },
+          webgl: {
+            executeMethod: "BuildScript.BuildWebGL",
+          },
+        },
+        defaultConfiguration: "windows",
+      },
+    },
   })
 
   // Check if Unity is installed
