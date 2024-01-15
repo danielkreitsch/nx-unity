@@ -7,19 +7,14 @@
     "name": {
       "type": "string",
       "description": "The name of the package.",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "What name would you like to use for the package?"
+      "default": "my-package",
+      "x-prompt": "What name would you like to use for the package?",
+      "pattern": "^[a-zA-Z][^:]*$"
     },
     "displayName": {
       "type": "string",
       "description": "The display name of the package.",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      },
+      "default": "My Package",
       "x-prompt": "What display name would you like to use for the package?"
     }
   },
