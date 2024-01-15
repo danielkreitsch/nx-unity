@@ -1,4 +1,21 @@
 import { getWorkspaceLayout, Tree } from "@nx/devkit"
+import { executeCommand } from "./exec"
+import { getUnityBinaryRelativePath } from "./platform"
+import * as path from "path"
+
+/**
+ * Creates a new Unity project from scratch by running the Unity CLI with the -createProject flag.
+ */
+async function createUnityProject(
+  unityBasePath: string,
+  unityVersion: string,
+  projectRoot: string
+) {
+  const unityBinaryPath = path.join(unityBasePath, unityVersion, getUnityBinaryRelativePath())
+  const command = `"${unityBinaryPath}" -quit -batchmode -nographics -logFile - -createProject ${projectRoot}`
+  console.log(`Executing command: ${command}`)
+  await executeCommand(command)
+}
 
 function addWorkspacePackageToUnityProject(
   tree: Tree,
@@ -36,4 +53,4 @@ function addDependencyToUnityProject(
   return false
 }
 
-export { addWorkspacePackageToUnityProject, addDependencyToUnityProject }
+export { createUnityProject, addWorkspacePackageToUnityProject, addDependencyToUnityProject }

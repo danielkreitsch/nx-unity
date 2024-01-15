@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@nx/devkit": "16.6.0",
+    "adm-zip": "^0.5.10",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
