@@ -16,7 +16,14 @@
       "description": "The display name of the package.",
       "default": "My Package",
       "x-prompt": "What display name would you like to use for the package?"
+    },
+    "assemblyName": {
+      "type": "string",
+      "description": "The name of the assembly definition.",
+      "default": "MyCompany.MyPackage",
+      "x-prompt": "What name would you like to use for the assembly definition?",
+      "pattern": "^[a-zA-Z][^:]*$"
     }
   },
-  "required": ["name", "displayName"]
+  "required": ["name", "displayName", "assemblyName"]
 }
