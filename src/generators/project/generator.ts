@@ -14,7 +14,7 @@ import * as fs from "fs"
 import * as os from "os"
 import axios from "axios"
 import AdmZip from "adm-zip"
-import { createUnityProject } from "../../utils/unity-project"
+import { addDependencyToUnityProject, createUnityProject } from "../../utils/unity-project"
 import { installPackage } from "../../utils/package-manager"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
@@ -90,6 +90,14 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
       throw new Error(`Failed to download template from ${downloadUrl}`)
     }
   }
+
+  // Add NxUnity package
+  addDependencyToUnityProject(
+    tree,
+    projectName,
+    "nx-unity",
+    "https://github.com/Glowdragon/nx-unity.git?path=/unity-package"
+  )
 
   // Install OpenUPM
   await installPackage("", "openupm-cli", true)
