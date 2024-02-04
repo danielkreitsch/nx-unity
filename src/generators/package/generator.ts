@@ -38,6 +38,11 @@ export async function packageGenerator(tree: Tree, options: PackageGeneratorSche
     options.assemblyName + ".Editor.Tests"
   )
 
+  // Add to global package.json
+  const packageJson = JSON.parse(tree.read("package.json").toString())
+  packageJson.unityDependencies[projectName] = `file:${projectRoot}`
+  tree.write("package.json", JSON.stringify(packageJson, null, 2))
+
   await formatFiles(tree)
 }
 
