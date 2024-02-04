@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NxUnity
 {
-  [System.Serializable]
+  [Serializable]
   public class GlobalDependenciesDefinition
   {
     public static string Path => NxUtils.GetWorkspaceRoot() + "/package.json";
