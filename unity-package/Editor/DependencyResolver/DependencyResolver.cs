@@ -107,9 +107,24 @@ namespace NxUnity
       return packageCollection.Any(p => p.name == packageName);
     }
 
-    private static bool InstallPackage(string packageName, string version)
+    private static bool InstallPackage(string packageName, string packageEntry)
     {
-      string packageIdentifier = $"{packageName}@{version}";
+      var packageIdentifier = $"{packageName}@{packageEntry}";
+
+      // Handle local packages
+      var isLocalPackage = packageEntry.StartsWith("file:");
+      if (isLocalPackage)
+      {
+        var packagePath = packageEntry["file:".Length..];
+        if (!Path.IsPathRooted(packagePath))
+        {
+          var absolutePackagePath = NxUtils.GetWorkspaceRoot() + "/" + packagePath;
+          var manifestDirectoryPath = NxUtils.GetWorkspaceRoot() + "/" + NxUtils.GetProjectRoot() + "/Packages";
+          packagePath = Path.GetRelativePath(manifestDirectoryPath, absolutePackagePath).Replace('\\', '/');
+          packageIdentifier = $"{packageName}@file:{packagePath}";
+        }
+      }
+
       LogVerbose($"Attempting to install package: {packageIdentifier}");
 
       var addRequest = Client.Add(packageIdentifier);
@@ -122,6 +137,12 @@ namespace NxUnity
       {
         LogVerbose($"Package {packageIdentifier} installed successfully.");
         return true;
+      }
+
+      if (isLocalPackage)
+      {
+        Debug.LogError($"Package {packageIdentifier} could not be installed: " + addRequest.Error.message);
+        return false;
       }
 
       LogVerbose($"Package {packageIdentifier} could not be installed. Trying to install via OpenUPM CLI.");
@@ -148,7 +169,7 @@ namespace NxUnity
         process.StartInfo.RedirectStandardError = true;
         process.StartInfo.UseShellExecute = false;
         process.StartInfo.CreateNoWindow = true;
-        process.StartInfo.WorkingDirectory = Directory.GetParent(Application.dataPath).FullName;
+        process.StartInfo.WorkingDirectory = Path.Join(NxUtils.GetWorkspaceRoot(), NxUtils.GetProjectRoot());
         process.Start();
         string output = process.StandardOutput.ReadToEnd();
         string error = process.StandardError.ReadToEnd();
