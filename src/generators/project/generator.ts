@@ -15,6 +15,7 @@ import * as os from "os"
 import axios from "axios"
 import AdmZip from "adm-zip"
 import { createUnityProject } from "../../utils/unity-project"
+import { installPackage } from "../../utils/package-manager"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
   const { name: projectName } = options
@@ -89,6 +90,9 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
       throw new Error(`Failed to download template from ${downloadUrl}`)
     }
   }
+
+  // Install OpenUPM
+  await installPackage("", "openupm-cli", true)
 
   await formatFiles(tree)
 }
