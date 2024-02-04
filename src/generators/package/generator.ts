@@ -8,6 +8,7 @@ import {
 import * as path from "path"
 import { PackageGeneratorSchema } from "./schema"
 import { createAssemblyDefinition } from "../../utils/assemblies"
+import { addImplicitDependency, getUnityProjects } from "../../utils/workspace"
 
 export async function packageGenerator(tree: Tree, options: PackageGeneratorSchema) {
   const { name: projectName } = options
@@ -42,6 +43,11 @@ export async function packageGenerator(tree: Tree, options: PackageGeneratorSche
   const packageJson = JSON.parse(tree.read("package.json").toString())
   packageJson.unityDependencies[projectName] = `file:${projectRoot}`
   tree.write("package.json", JSON.stringify(packageJson, null, 2))
+
+  // Add implicit dependency to all Unity projects in the Nx config
+  getUnityProjects(tree).forEach((unityProjectName) => {
+    addImplicitDependency(tree, unityProjectName, projectName)
+  })
 
   await formatFiles(tree)
 }
