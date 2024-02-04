@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace NxUnity
 {
-  public static class ReflectionUtility
+  public static class ReflectionUtils
   {
     /// <summary>
     /// Tries to find a private field in class or in any of the parent classes.

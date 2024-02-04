@@ -107,7 +107,7 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
   await formatFiles(tree)
 }
 
-function downloadFile(url: string, outputFilePath: string): Promise<void> {
+async function downloadFile(url: string, outputFilePath: string): Promise<void> {
   return axios({
     method: "GET",
     url: url,
