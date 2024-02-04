@@ -31,22 +31,22 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
         executor: "nx-unity:build",
         configurations: {
           windows: {
-            executeMethod: "BuildScript.BuildWindows",
+            executeMethod: "BuildCommands.BuildWindows",
           },
           macos: {
-            executeMethod: "BuildScript.BuildMacOS",
+            executeMethod: "BuildCommands.BuildMacOS",
           },
           linux: {
-            executeMethod: "BuildScript.BuildLinux",
+            executeMethod: "BuildCommands.BuildLinux",
           },
           android: {
-            executeMethod: "BuildScript.BuildAndroid",
+            executeMethod: "BuildCommands.BuildAndroid",
           },
           ios: {
-            executeMethod: "BuildScript.BuildiOS",
+            executeMethod: "BuildCommands.BuildiOS",
           },
           webgl: {
-            executeMethod: "BuildScript.BuildWebGL",
+            executeMethod: "BuildCommands.BuildWebGL",
           },
         },
         defaultConfiguration: "windows",
