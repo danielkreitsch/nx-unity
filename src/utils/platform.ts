@@ -1,15 +1,16 @@
 import * as os from "os"
+import * as path from "path"
 
 const UNITY_BASE_PATHS = {
-  win32: "C:/Program Files/Unity/Hub/Editor",
-  darwin: "/Applications/Unity/Hub/Editor",
-  linux: "~/Unity/Hub/Editor",
+  win32: path.join("C:", "Program Files", "Unity", "Hub", "Editor"),
+  darwin: path.join("/", "Applications", "Unity", "Hub", "Editor"),
+  linux: path.join("~", "Unity", "Hub", "Editor"),
 }
 
 const UNITY_EXECUTABLE_PATHS = {
-  win32: "Editor/Unity.exe",
-  darwin: "Unity.app/Contents/MacOS/Unity",
-  linux: "Unity",
+  win32: path.join("Editor", "Unity.exe"),
+  darwin: path.join("Unity.app", "Contents", "MacOS", "Unity"),
+  linux: path.join("Unity"),
 }
 
 /**
@@ -41,7 +42,7 @@ function getUnityBinaryRelativePath(): string {
 function getUnityBinaryPath(version: string) {
   const unityBasePath = getUnityBasePath()
   const unityBinaryRelativePath = getUnityBinaryRelativePath()
-  return `${unityBasePath}/${version}/${unityBinaryRelativePath}`
+  return path.join(unityBasePath, version, unityBinaryRelativePath)
 }
 
 export { getUnityBasePath, getUnityBinaryRelativePath, getUnityBinaryPath }
