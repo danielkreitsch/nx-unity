@@ -5,14 +5,14 @@ import {
   getWorkspaceLayout,
   Tree,
 } from "@nx/devkit"
-import * as path from "path"
 import { PackageGeneratorSchema } from "./schema"
 import { createAssemblyDefinition } from "../../utils/assemblies"
 import { addImplicitDependency, getUnityProjects } from "../../utils/workspace"
+import { posixJoin } from "../../utils/posix"
 
 export async function packageGenerator(tree: Tree, options: PackageGeneratorSchema) {
   const { name: projectName } = options
-  const projectRoot = path.join(getWorkspaceLayout(tree).libsDir, projectName)
+  const projectRoot = posixJoin(getWorkspaceLayout(tree).libsDir, projectName)
 
   // Add the project to the Nx workspace
   addProjectConfiguration(tree, options.name, {
@@ -23,19 +23,19 @@ export async function packageGenerator(tree: Tree, options: PackageGeneratorSche
   })
 
   // Copy default files
-  generateFiles(tree, path.join(__dirname, "files"), projectRoot, options)
+  generateFiles(tree, posixJoin(__dirname, "files"), projectRoot, options)
 
   // Create assembly definitions
-  createAssemblyDefinition(tree, path.join(projectRoot, "Runtime"), options.assemblyName)
-  createAssemblyDefinition(tree, path.join(projectRoot, "Editor"), options.assemblyName + ".Editor")
+  createAssemblyDefinition(tree, posixJoin(projectRoot, "Runtime"), options.assemblyName)
+  createAssemblyDefinition(tree, posixJoin(projectRoot, "Editor"), options.assemblyName + ".Editor")
   createAssemblyDefinition(
     tree,
-    path.join(projectRoot, "Tests", "Runtime"),
+    posixJoin(projectRoot, "Tests", "Runtime"),
     options.assemblyName + ".Tests"
   )
   createAssemblyDefinition(
     tree,
-    path.join(projectRoot, "Tests", "Editor"),
+    posixJoin(projectRoot, "Tests", "Editor"),
     options.assemblyName + ".Editor.Tests"
   )
 

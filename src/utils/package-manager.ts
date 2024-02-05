@@ -1,13 +1,13 @@
 import { executeCommand } from "./exec"
 import { detectPackageManager, workspaceRoot } from "@nx/devkit"
-import * as path from "path"
+import { posixJoin } from "./posix"
 
 async function installPackages(
   projectRoot: string,
   packageNames: string[] | undefined = undefined,
   isDevDependency = false
 ) {
-  const packageManager = detectPackageManager(path.join(workspaceRoot))
+  const packageManager = detectPackageManager(posixJoin(workspaceRoot))
   let command = packageManager === "yarn" ? "yarn" : "npm install"
   if (packageNames !== undefined) {
     command =
@@ -18,7 +18,7 @@ async function installPackages(
       command += packageManager === "yarn" ? " --dev" : " --save-dev"
     }
   }
-  await executeCommand(command, path.join(workspaceRoot, projectRoot))
+  await executeCommand(command, posixJoin(workspaceRoot, projectRoot))
 }
 
 async function installPackage(projectRoot: string, packageName: string, isDevDependency: boolean) {

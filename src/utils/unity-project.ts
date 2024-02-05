@@ -1,7 +1,7 @@
 import { getWorkspaceLayout, Tree } from "@nx/devkit"
 import { executeCommand } from "./exec"
 import { getUnityBinaryRelativePath } from "./platform"
-import * as path from "path"
+import { posixJoin } from "./posix"
 
 /**
  * Creates a new Unity project from scratch by running the Unity CLI with the -createProject flag.
@@ -11,7 +11,7 @@ async function createUnityProject(
   unityVersion: string,
   projectRoot: string
 ) {
-  const unityBinaryPath = path.join(unityBasePath, unityVersion, getUnityBinaryRelativePath())
+  const unityBinaryPath = posixJoin(unityBasePath, unityVersion, getUnityBinaryRelativePath())
   const command = `"${unityBinaryPath}" -quit -batchmode -nographics -logFile - -createProject ${projectRoot}`
   await executeCommand(command)
 }
@@ -26,7 +26,7 @@ function addWorkspacePackageToUnityProject(
     tree,
     projectName,
     packageName,
-    `file:../../../${workspaceLayout.libsDir}/${packageName}`
+    "file:" + posixJoin("..", "..", "..", workspaceLayout.libsDir, packageName)
   )
 }
 
@@ -41,7 +41,7 @@ function addDependencyToUnityProject(
   dependencyValue: string
 ): boolean {
   const workspaceLayout = getWorkspaceLayout(tree)
-  const manifestPath = `${workspaceLayout.appsDir}/${projectName}/Packages/manifest.json`
+  const manifestPath = posixJoin(workspaceLayout.appsDir, projectName, "Packages", "manifest.json")
   const manifest = JSON.parse(tree.read(manifestPath).toString())
   const dependencies = manifest.dependencies
   if (!dependencies[dependencyKey]) {
