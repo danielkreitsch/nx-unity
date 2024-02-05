@@ -1,5 +1,5 @@
 import { getProjects, readProjectConfiguration, Tree, updateProjectConfiguration } from "@nx/devkit"
-import * as path from "path"
+import { posixJoin } from "./posix"
 
 function getUnityProjects(tree: Tree) {
   return getApplications(tree).filter((application) => {
@@ -21,11 +21,11 @@ function getApplications(tree: Tree) {
 function getUnityPackages(tree: Tree) {
   return getLibraries(tree).filter((library) => {
     const projectConfig = readProjectConfiguration(tree, library)
-    const packageJsonExists = tree.exists(path.join(projectConfig.sourceRoot, "package.json"))
+    const packageJsonExists = tree.exists(posixJoin(projectConfig.sourceRoot, "package.json"))
     const packageJsonMetaExists = tree.exists(
-      path.join(projectConfig.sourceRoot, "package.json.meta")
+      posixJoin(projectConfig.sourceRoot, "package.json.meta")
     )
-    const runtimeFolderExists = tree.exists(path.join(projectConfig.sourceRoot, "Runtime"))
+    const runtimeFolderExists = tree.exists(posixJoin(projectConfig.sourceRoot, "Runtime"))
     return packageJsonExists && (packageJsonMetaExists || runtimeFolderExists)
   })
 }

@@ -7,7 +7,6 @@ import {
   Tree,
 } from "@nx/devkit"
 import { ProjectGeneratorSchema } from "./schema"
-import * as path from "path"
 import { getUnityBasePath } from "../../utils/platform"
 import { promptForUnityVersion } from "../../utils/prompts"
 import * as fs from "fs"
@@ -16,17 +15,18 @@ import axios from "axios"
 import AdmZip from "adm-zip"
 import { addDependencyToUnityProject, createUnityProject } from "../../utils/unity-project"
 import { installPackage } from "../../utils/package-manager"
-import { addImplicitDependency, getUnityPackages, getUnityProjects } from "../../utils/workspace"
+import { getUnityPackages } from "../../utils/workspace"
+import { posixJoin } from "../../utils/posix"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
   const { name: projectName } = options
-  const projectRoot = path.join(getWorkspaceLayout(tree).appsDir, projectName)
+  const projectRoot = posixJoin(getWorkspaceLayout(tree).appsDir, projectName)
 
   // Add the project to the Nx workspace
   addProjectConfiguration(tree, options.name, {
     root: projectRoot,
     projectType: "application",
-    sourceRoot: `${projectRoot}/Assets`,
+    sourceRoot: posixJoin(projectRoot, "Assets"),
     targets: {
       build: {
         executor: "nx-unity:build",
@@ -66,11 +66,11 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
   const unityVersion = await promptForUnityVersion(unityBasePath, "Select Unity version")
 
   // Copy general starter files
-  generateFiles(tree, path.join(__dirname, "files"), projectRoot, options)
+  generateFiles(tree, posixJoin(__dirname, "files"), projectRoot, options)
 
   // Download and extract the selected template
-  const basePath = `${os.tmpdir()}/nx-unity/templates/${unityVersion}`
-  const templatePath = `${basePath}/${options.template}`
+  const basePath = posixJoin(os.tmpdir(), "nx-unity", "templates", unityVersion)
+  const templatePath = posixJoin(basePath, options.template)
   const templateZipPath = `${templatePath}.zip`
   const downloadUrl = `https://nx-unity-cdn.vercel.app/templates/${unityVersion}/${options.template}.zip`
   try {

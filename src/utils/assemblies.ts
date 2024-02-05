@@ -1,5 +1,5 @@
 import { Tree } from "@nx/devkit"
-import * as path from "path"
+import { posixJoin } from "./posix"
 
 /**
  * Creates an assembly definition file.
@@ -9,7 +9,7 @@ import * as path from "path"
  */
 function createAssemblyDefinition(tree: Tree, outputPath: string, name: string) {
   tree.write(
-    path.join(outputPath, `${name}.asmdef`),
+    posixJoin(outputPath, `${name}.asmdef`),
     JSON.stringify({
       name: name,
       rootNamespace: "",
