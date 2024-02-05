@@ -29,7 +29,7 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
   // Build the project using the Unity CLI
   const unityBinaryPath = getUnityBinaryPath(version)
   const command = `"${unityBinaryPath}" -quit -batchmode -nographics -logFile - -executeMethod ${options.executeMethod} -projectPath "${tempProjectPath}"`
-  let success = await executeCommand(command)
+  await executeCommand(command)
 
-  return { success }
+  return { success: true }
 }
