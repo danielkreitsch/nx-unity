@@ -1,8 +1,10 @@
 {
-  "name": "nx-unity",
+  "name": "com.danielkreitsch.nx-unity",
   "version": "0.0.1",
   "displayName": "Nx Unity",
+  "description": "Resolves global dependencies in an Nx workspace",
+  "author": "Daniel Kreitsch",
   "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "3.0.2"
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
   }
 }

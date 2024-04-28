@@ -17,6 +17,7 @@ import { addDependencyToUnityProject, createUnityProject } from "../../utils/uni
 import { installPackage } from "../../utils/package-manager"
 import { getUnityPackages } from "../../utils/workspace"
 import { posixJoin } from "../../utils/posix"
+import { executeCommand } from "../../utils/exec"
 
 export async function projectGenerator(tree: Tree, options: ProjectGeneratorSchema) {
   const { name: projectName } = options
@@ -93,16 +94,11 @@ export async function projectGenerator(tree: Tree, options: ProjectGeneratorSche
     }
   }
 
-  // Add NxUnity package
-  addDependencyToUnityProject(
-    tree,
-    projectName,
-    "nx-unity",
-    "https://github.com/Glowdragon/nx-unity.git?path=/unity-package"
-  )
-
   // Install OpenUPM
   await installPackage("", "openupm-cli", true)
+
+  // Add the Unity package of the Nx plugin
+  await executeCommand("npx openupm add com.danielkreitsch.nx-unity -r http://verdaccio.danielkreitsch.com", projectRoot)
 
   await formatFiles(tree)
 }
