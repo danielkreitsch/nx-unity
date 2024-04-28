@@ -41,6 +41,9 @@ export async function packageGenerator(tree: Tree, options: PackageGeneratorSche
 
   // Add to global package.json
   const packageJson = JSON.parse(tree.read("package.json").toString())
+  if (!packageJson.unityDependencies) {
+    packageJson.unityDependencies = {}
+  }
   packageJson.unityDependencies[projectName] = `file:${projectRoot}`
   tree.write("package.json", JSON.stringify(packageJson, null, 2))
 
