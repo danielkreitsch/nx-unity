@@ -55,7 +55,7 @@ namespace NxUnity
         // Add all installed packages to the global package.json
         foreach (var installedPackage in installedPackages)
         {
-          globalDependenciesDefinition.AddDependency(installedPackage);
+          globalDependenciesDefinition.RegisterInstalledPackage(installedPackage);
           somethingChanged = true;
         }
       }
@@ -73,7 +73,7 @@ namespace NxUnity
 
           if (add)
           {
-            globalDependenciesDefinition.AddDependency(installedPackage);
+            globalDependenciesDefinition.RegisterInstalledPackage(installedPackage);
             somethingChanged = true;
           }
           else
@@ -175,9 +175,9 @@ namespace NxUnity
         string error = process.StandardError.ReadToEnd();
         process.WaitForExit();
 
-        Debug.Log("Working directory: " + process.StartInfo.WorkingDirectory);
-        Debug.Log("Executing command: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
-        Debug.Log("Output: " + output);
+        // Debug.Log("Working directory: " + process.StartInfo.WorkingDirectory);
+        // Debug.Log("Executing command: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+        // Debug.Log("Output: " + output);
 
         if (process.ExitCode != 0)
         {

@@ -26,16 +26,19 @@ namespace NxUnity
       return JsonConvert.DeserializeObject<GlobalDependenciesDefinition>(jsonContent);
     }
 
-    public void AddDependency(string name, string version)
+    public void RegisterInstalledPackage(PackageInfo package)
     {
-      this.dependencies.Add(name, version);
-    }
+      var packageName = package.name;
+      package.TryFindPrivateBaseField("m_ProjectDependenciesEntry", out string dependencyReference);
 
-    public void AddDependency(PackageInfo packageInfo)
-    {
-      var name = packageInfo.name;
-      packageInfo.TryFindPrivateBaseField("m_ProjectDependenciesEntry", out string entry);
-      this.AddDependency(name, entry);
+      if (dependencyReference.StartsWith("file:"))
+      {
+        var packagesDirectory = NxUtils.GetWorkspaceRoot() + "/" + NxUtils.GetProjectRoot() + "/Packages";
+        var absolutePath = packagesDirectory + "/" + dependencyReference.Substring(5);
+        dependencyReference = "file:" + System.IO.Path.GetRelativePath(NxUtils.GetWorkspaceRoot(), absolutePath).Replace('\\', '/');;
+      }
+
+      this.dependencies.Add(packageName, dependencyReference);
     }
 
     public void Save()
