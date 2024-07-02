@@ -1,0 +1,44 @@
+{
+  "name": "nx-unity",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/nx-unity/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/nx-unity",
+        "main": "packages/nx-unity/src/index.ts",
+        "tsConfig": "packages/nx-unity/tsconfig.lib.json",
+        "assets": [
+          "packages/nx-unity/*.md",
+          {
+            "input": "./packages/nx-unity/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/nx-unity/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/nx-unity",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/nx-unity",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
